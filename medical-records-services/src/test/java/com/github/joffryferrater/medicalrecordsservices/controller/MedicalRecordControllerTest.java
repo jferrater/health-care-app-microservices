@@ -1,12 +1,15 @@
 package com.github.joffryferrater.medicalrecordsservices.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.CoreMatchers.is;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.joffryferrater.medicalrecordsservices.MedicalRecordsServicesApplication;
+import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordEntity;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordRepository;
 import java.time.LocalDate;
@@ -35,6 +38,8 @@ public class MedicalRecordControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private MedicalRecordRepository medicalRecordRepository;
 
@@ -66,5 +71,20 @@ public class MedicalRecordControllerTest {
             .andExpect(content()
                 .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].patient", is("Kevin")));
+    }
+
+    @Test
+    public void shouldReturnStatusCreated() throws Exception {
+        final MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setPatient("Peter");
+        medicalRecord.setPostOperativeNotes("postOperativeNotes");
+        mockMvc.perform(post("/api/v1/medical_records")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(medicalRecord)))
+            .andExpect(status().isCreated())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.postOperativeNotes", is("postOperativeNotes")))
+            .andExpect(jsonPath("$.patient", is("Peter")));
     }
 }

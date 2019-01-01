@@ -3,6 +3,8 @@ package com.github.joffryferrater.medicalrecordsservices.repository;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -15,8 +17,9 @@ public class MedicalRecordEntity {
 
     @Id
     @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "PATIENT_NAME", nullable = false, unique = true)
+    @Column(name = "PATIENT_NAME", nullable = false)
     private String patientName;
     @Column(name = "DATE")
     private LocalDate date;

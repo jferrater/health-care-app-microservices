@@ -1,5 +1,6 @@
 package com.github.joffryferrater.medicalrecordsservices.service;
 
+import static com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord.translateToMedicalRecord;
 import static java.util.stream.Collectors.toList;
 
 import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
@@ -21,26 +22,16 @@ public class MedicalRecordService {
         this.medicalRecordRepository = medicalRecordRepository;
     }
 
+    public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
+        final MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
+            .save(medicalRecord.translateToMedicalRecordEntity());
+        return translateToMedicalRecord(medicalRecordEntity);
+    }
+
     public List<MedicalRecord> getPatientMedicalRecords(String patientName) {
         final List<MedicalRecordEntity> medicalRecordEntities = medicalRecordRepository
             .getMedicalRecordsByPatientName(patientName);
-        return medicalRecordEntities.stream().map(this::toMedicalRecord).collect(toList());
+        return medicalRecordEntities.stream().map(MedicalRecord::translateToMedicalRecord).collect(toList());
     }
 
-    private MedicalRecord toMedicalRecord(MedicalRecordEntity record) {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setPatient(record.getPatientName());
-        medicalRecord.setAdmissionNotes(record.getAdmissionNotes());
-        medicalRecord.setDate(record.getDate());
-        medicalRecord.setDeliveryNotes(record.getDeliveryNotes());
-        medicalRecord.setDischargeNotes(record.getDischargeNotes());
-        medicalRecord.setOnServiceNotes(record.getOnServiceNotes());
-        medicalRecord.setOperativeNotes(record.getOperativeNotes());
-        medicalRecord.setPostOperativeNotes(record.getPostOperativeNotes());
-        medicalRecord.setPostpartumNotes(record.getPostpartumNotes());
-        medicalRecord.setPreOperativeNotes(record.getPreOperativeNotes());
-        medicalRecord.setProcedureNotes(record.getProcedureNotes());
-        medicalRecord.setProgressNotes(record.getProgressNotes());
-        return medicalRecord;
-    }
 }
