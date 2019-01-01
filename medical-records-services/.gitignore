@@ -1,5 +1,5 @@
-**/.gradle
-**/build/
+.gradle
+/build/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###
@@ -12,11 +12,11 @@
 .sts4-cache
 
 ### IntelliJ IDEA ###
-**/.idea
-**/*.iws
-**/*.iml
+.idea
+*.iws
+*.iml
 *.ipr
-**/out/
+/out/
 
 ### NetBeans ###
 /nbproject/private/
