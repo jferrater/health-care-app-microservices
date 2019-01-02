@@ -11,6 +11,7 @@ import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecord
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +53,18 @@ public class MedicalRecordServiceTest {
 
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getAdmissionNotes(), is("admission notes"));
+    }
+
+    @Test
+    public void shouldReturnMedicalRecordById() {
+        MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
+        medicalRecordEntity.setId(4L);
+        medicalRecordEntity.setPatientName("Peter");
+        when(mockMedicalRecordRepository.findById(4L)).thenReturn(Optional.of(medicalRecordEntity));
+
+        final Optional<MedicalRecord> result = target.getMedicalRecordById(4L);
+
+        assertThat(result.isPresent(), is(true));
     }
 
     @Test

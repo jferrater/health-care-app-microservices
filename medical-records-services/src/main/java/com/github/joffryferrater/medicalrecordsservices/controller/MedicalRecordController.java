@@ -5,8 +5,10 @@ import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.service.MedicalRecordService;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +35,20 @@ public class MedicalRecordController {
         return medicalRecordService.getPatientMedicalRecords(patientName);
     }
 
+    @GetMapping("/medical_records/{id}")
+    public MedicalRecord getMedicalRecordById(@PathVariable("id") Long id) {
+        final Optional<MedicalRecord> medicalRecordOptional = medicalRecordService.getMedicalRecordById(id);
+        if (medicalRecordOptional.isPresent()) {
+            return medicalRecordOptional.get();
+        }
+        throw  new MedicalRecordNotFoundException("Medical Record not found with id: " + id);
+    }
+
     @PostMapping("medical_records")
     public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         final MedicalRecord result = medicalRecordService.createMedicalRecord(medicalRecord);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(result.getId())
+            .toUri();
         return ResponseEntity.created(location).body(result);
     }
 }

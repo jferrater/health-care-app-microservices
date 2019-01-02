@@ -1,11 +1,11 @@
 package com.github.joffryferrater.medicalrecordsservices.controller;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.CoreMatchers.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.joffryferrater.medicalrecordsservices.MedicalRecordsServicesApplication;
@@ -13,7 +13,6 @@ import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordEntity;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordRepository;
 import java.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,14 +47,8 @@ public class MedicalRecordControllerTest {
         createTestData();
     }
 
-    @After
-    public void tearDown() {
-        medicalRecordRepository.deleteAll();
-    }
-
     private void createTestData() {
         MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
-        medicalRecordEntity.setId(3L);
         medicalRecordEntity.setPatientName("Kevin");
         medicalRecordEntity.setAdmissionNotes("admission notes");
         medicalRecordEntity.setOnServiceNotes("on service notes");
@@ -87,4 +80,15 @@ public class MedicalRecordControllerTest {
             .andExpect(jsonPath("$.postOperativeNotes", is("postOperativeNotes")))
             .andExpect(jsonPath("$.patient", is("Peter")));
     }
+
+    @Test
+    public void shouldReturnStatusOkForMedicalRecordIdPath() throws Exception {
+        mockMvc.perform(get("/api/v1/medical_records/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.patient", is("Tony")));
+    }
+
 }
