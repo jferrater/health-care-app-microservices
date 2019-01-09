@@ -1,6 +1,6 @@
 package com.github.joffryferrater.medicalrecordsservices.repository;
 
-import java.time.LocalDate;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ public class MedicalRecordEntity {
     @Column(name = "PATIENT_NAME", nullable = false)
     private String patientName;
     @Column(name = "DATE")
-    private LocalDate date;
+    private Date date;
     @Column(name = "ADMISSION_NOTES")
     private String admissionNotes;
     @Column(name = "ONSERVICE_NOTES")
@@ -64,11 +64,11 @@ public class MedicalRecordEntity {
         this.patientName = patientName;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

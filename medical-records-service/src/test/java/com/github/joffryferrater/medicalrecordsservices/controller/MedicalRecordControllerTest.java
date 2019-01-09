@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.joffryferrater.medicalrecordsservices.MedicalRecordsServicesApplication;
-import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordEntity;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordRepository;
-import java.time.LocalDate;
+import com.github.joffryferrater.resource.models.MedicalRecord;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class MedicalRecordControllerTest {
         medicalRecordEntity.setPatientName("Kevin");
         medicalRecordEntity.setAdmissionNotes("admission notes");
         medicalRecordEntity.setOnServiceNotes("on service notes");
-        medicalRecordEntity.setDate(LocalDate.now());
+        medicalRecordEntity.setDate(new Date());
         medicalRecordRepository.save(medicalRecordEntity);
     }
 

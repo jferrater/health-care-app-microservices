@@ -1,13 +1,10 @@
-package com.github.joffryferrater.medicalrecordsservices.domain;
+package com.github.joffryferrater.resource.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordEntity;
-import java.time.LocalDate;
+import java.util.Date;
 
-/**
- * Created by joffer on 1/1/2019
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MedicalRecord {
 
@@ -15,8 +12,9 @@ public class MedicalRecord {
     private long id;
     @JsonProperty("patient")
     private String patient;
-    @JsonProperty("date")
-    private LocalDate date;
+    @JsonProperty("dateCreated")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date date;
     @JsonProperty("admissionNotes")
     private String admissionNotes;
     @JsonProperty("onServiceNotes")
@@ -40,6 +38,7 @@ public class MedicalRecord {
 
     public MedicalRecord() {
         //Empty constructor for Jackson
+        this.date = new Date();
     }
 
     public long getId() {
@@ -58,11 +57,11 @@ public class MedicalRecord {
         this.patient = patient;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -144,40 +143,5 @@ public class MedicalRecord {
 
     public void setDischargeNotes(String dischargeNotes) {
         this.dischargeNotes = dischargeNotes;
-    }
-
-    public MedicalRecordEntity translateToMedicalRecordEntity() {
-        MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
-        medicalRecordEntity.setPatientName(this.patient);
-        medicalRecordEntity.setOnServiceNotes(this.onServiceNotes);
-        medicalRecordEntity.setDate(this.date);
-        medicalRecordEntity.setDischargeNotes(this.dischargeNotes);
-        medicalRecordEntity.setAdmissionNotes(this.admissionNotes);
-        medicalRecordEntity.setDeliveryNotes(this.deliveryNotes);
-        medicalRecordEntity.setOperativeNotes(this.operativeNotes);
-        medicalRecordEntity.setPostOperativeNotes(this.postOperativeNotes);
-        medicalRecordEntity.setPostpartumNotes(this.postpartumNotes);
-        medicalRecordEntity.setPreOperativeNotes(this.preOperativeNotes);
-        medicalRecordEntity.setProcedureNotes(this.procedureNotes);
-        medicalRecordEntity.setProgressNotes(this.progressNotes);
-        return medicalRecordEntity;
-    }
-
-    public static MedicalRecord translateToMedicalRecord(MedicalRecordEntity record) {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setId(record.getId());
-        medicalRecord.setPatient(record.getPatientName());
-        medicalRecord.setAdmissionNotes(record.getAdmissionNotes());
-        medicalRecord.setDate(record.getDate());
-        medicalRecord.setDeliveryNotes(record.getDeliveryNotes());
-        medicalRecord.setDischargeNotes(record.getDischargeNotes());
-        medicalRecord.setOnServiceNotes(record.getOnServiceNotes());
-        medicalRecord.setOperativeNotes(record.getOperativeNotes());
-        medicalRecord.setPostOperativeNotes(record.getPostOperativeNotes());
-        medicalRecord.setPostpartumNotes(record.getPostpartumNotes());
-        medicalRecord.setPreOperativeNotes(record.getPreOperativeNotes());
-        medicalRecord.setProcedureNotes(record.getProcedureNotes());
-        medicalRecord.setProgressNotes(record.getProgressNotes());
-        return medicalRecord;
     }
 }

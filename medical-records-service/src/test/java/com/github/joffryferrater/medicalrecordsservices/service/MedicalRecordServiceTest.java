@@ -5,46 +5,43 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordEntity;
 import com.github.joffryferrater.medicalrecordsservices.repository.MedicalRecordRepository;
-import java.time.LocalDate;
-import java.util.Collections;
+import com.github.joffryferrater.resource.models.MedicalRecord;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Created by joffer on 1/1/2019
  */
 @RunWith(SpringRunner.class)
+@DataJpaTest
 public class MedicalRecordServiceTest {
 
-    @MockBean
-    private MedicalRecordRepository mockMedicalRecordRepository;
-    @MockBean
-    private MedicalRecord mockMedicalRecord;
+    @Autowired
+    private MedicalRecordRepository medicalRecordRepository;
 
     private MedicalRecordService target;
 
     @Before
     public void setUp() {
-        target = new MedicalRecordService(mockMedicalRecordRepository);
-        mockData();
+        target = new MedicalRecordService(medicalRecordRepository);
+        testData();
     }
 
-    private void mockData() {
+    private void testData() {
         MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
-        medicalRecordEntity.setId(1L);
         medicalRecordEntity.setPatientName("Alice");
         medicalRecordEntity.setAdmissionNotes("admission notes");
-        medicalRecordEntity.setDate(LocalDate.now());
-        when(mockMedicalRecordRepository.getMedicalRecordsByPatientName("Alice")).thenReturn(
-            Collections.singletonList(medicalRecordEntity));
+        medicalRecordEntity.setDate(new Date());
+        medicalRecordRepository.save(medicalRecordEntity);
     }
 
     @Test
@@ -58,26 +55,22 @@ public class MedicalRecordServiceTest {
     @Test
     public void shouldReturnMedicalRecordById() {
         MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
-        medicalRecordEntity.setId(4L);
         medicalRecordEntity.setPatientName("Peter");
-        when(mockMedicalRecordRepository.findById(4L)).thenReturn(Optional.of(medicalRecordEntity));
+        medicalRecordRepository.save(medicalRecordEntity);
 
-        final Optional<MedicalRecord> result = target.getMedicalRecordById(4L);
+        final Optional<MedicalRecord> result = target.getMedicalRecordById(1L);
 
         assertThat(result.isPresent(), is(true));
     }
 
     @Test
     public void shouldCreateMedicalRecord() {
-        MedicalRecordEntity medicalRecordEntity = new MedicalRecordEntity();
-        medicalRecordEntity.setId(2L);
-        medicalRecordEntity.setPatientName("Bob");
-        medicalRecordEntity.setDate(LocalDate.now());
-        when(mockMedicalRecordRepository.save(medicalRecordEntity)).thenReturn(medicalRecordEntity);
-        when(mockMedicalRecord.translateToMedicalRecordEntity()).thenReturn(medicalRecordEntity);
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setPatient("Bob");
 
-        final MedicalRecord result = target.createMedicalRecord(mockMedicalRecord);
+        final MedicalRecord result = target.createMedicalRecord(medicalRecord);
 
         assertThat(result, is(notNullValue()));
     }
+
 }

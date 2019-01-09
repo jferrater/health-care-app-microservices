@@ -1,8 +1,8 @@
 package com.github.joffryferrater.medicalrecordsservices.controller;
 
 
-import com.github.joffryferrater.medicalrecordsservices.domain.MedicalRecord;
 import com.github.joffryferrater.medicalrecordsservices.service.MedicalRecordService;
+import com.github.joffryferrater.resource.models.MedicalRecord;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class MedicalRecordController {
         if (medicalRecordOptional.isPresent()) {
             return medicalRecordOptional.get();
         }
-        throw  new MedicalRecordNotFoundException("Medical Record not found with id: " + id);
+        throw new MedicalRecordNotFoundException("Medical Record not found with id: " + id);
     }
 
     @PostMapping("medical_records")
