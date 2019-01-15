@@ -10,6 +10,7 @@ import com.github.joffryferrater.resource.models.MedicalRecord;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by joffer on 1/1/2019
@@ -24,6 +25,7 @@ public class MedicalRecordService {
         this.medicalRecordRepository = medicalRecordRepository;
     }
 
+    @Transactional
     public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
         final MedicalRecordEntity medicalRecordEntity = medicalRecordRepository
             .save(toMedicalRecordEntity(medicalRecord));
