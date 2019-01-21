@@ -30,4 +30,9 @@ public class PatientService {
         final Optional<PatientEntity> patientEntity = patientRepository.findBySocialSecurityNumber(socialSecurityNumber);
         return patientEntity.map(TranslateUtil::toPatient);
     }
+
+    public Optional<Patient> findPatientById(Long id) {
+        final Optional<PatientEntity> patientEntityOptional = patientRepository.findById(id);
+        return patientEntityOptional.map(TranslateUtil::toPatient);
+    }
 }

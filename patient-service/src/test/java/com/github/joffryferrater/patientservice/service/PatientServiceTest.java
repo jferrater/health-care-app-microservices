@@ -66,6 +66,18 @@ public class PatientServiceTest {
         assertThat(result.getId(), is(notNullValue()));
     }
 
+    @Test
+    public void shouldFindPatientById(){
+        PatientEntity patientEntity = new PatientEntity();
+        patientEntity.setFirstName("test");
+        patientEntity.setSocialSecurityNumber("3642466");
+        final PatientEntity save = patientRepository.save(patientEntity);
+
+        final Optional<Patient> result = target.findPatientById(save.getId());
+
+        assertThat(result.isPresent(), is(true));
+    }
+
     private Patient newPatient(String firstName, String lastName, String contactNumber,
         String socialSecurityNumber) {
         Patient patient = new Patient();

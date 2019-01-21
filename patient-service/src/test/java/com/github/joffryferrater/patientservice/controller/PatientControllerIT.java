@@ -2,13 +2,16 @@ package com.github.joffryferrater.patientservice.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.joffryferrater.patientservice.PatientServiceApplication;
 import com.github.joffryferrater.patientservice.repository.PatientEntity;
 import com.github.joffryferrater.patientservice.repository.PatientRepository;
+import com.github.joffryferrater.resource.models.Patient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +39,8 @@ public class PatientControllerIT {
     private MockMvc mockMvc;
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
@@ -74,5 +79,39 @@ public class PatientControllerIT {
         mockMvc.perform(get("/api/v1/patients?socialSecurityNumber=not-existing")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldReturnStatusCreated() throws Exception {
+        final Patient patient = new Patient();
+        patient.setSocialSecurityNumber("19850227-1234");
+        patient.setFirstName("Alice");
+        patient.setLastName("Roger");
+        mockMvc.perform(post("/api/v1/patients")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(patient)))
+            .andExpect(status().isCreated())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.firstName", is("Alice")))
+            .andExpect(jsonPath("$.socialSecurityNumber", is("19850227-1234")))
+            .andExpect(jsonPath("$.lastName", is("Roger")));
+    }
+
+    @Test
+    public void shouldFindPatientById() throws Exception {
+        PatientEntity patientEntity = new PatientEntity();
+        patientEntity.setId(4L);
+        patientEntity.setFirstName("Joe");
+        patientEntity.setSocialSecurityNumber("535235");
+        final PatientEntity entity = patientRepository.save(patientEntity);
+
+        mockMvc.perform(get("/api/v1/patients/"+entity.getId())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content()
+                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.firstName", is("Joe")))
+            .andExpect(jsonPath("$.socialSecurityNumber", is("535235")));
     }
 }
