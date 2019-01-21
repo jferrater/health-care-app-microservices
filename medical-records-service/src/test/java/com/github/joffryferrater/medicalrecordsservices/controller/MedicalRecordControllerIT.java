@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
     classes = MedicalRecordsServicesApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-public class MedicalRecordControllerTest {
+public class MedicalRecordControllerIT {
 
     @Autowired
     private MockMvc mockMvc;

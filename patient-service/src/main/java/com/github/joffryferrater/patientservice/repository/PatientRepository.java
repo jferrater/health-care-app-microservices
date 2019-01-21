@@ -1,5 +1,6 @@
 package com.github.joffryferrater.patientservice.repository;
 
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -7,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface PatientRepository extends CrudRepository<PatientEntity, Long> {
 
-    PatientEntity findBySocialSecurityNumber(String socialSecurityNumber);
+    Optional<PatientEntity> findBySocialSecurityNumber(String socialSecurityNumber);
 }

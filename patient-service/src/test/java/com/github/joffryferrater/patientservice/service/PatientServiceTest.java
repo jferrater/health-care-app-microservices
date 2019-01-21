@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import com.github.joffryferrater.patientservice.repository.PatientEntity;
 import com.github.joffryferrater.patientservice.repository.PatientRepository;
 import com.github.joffryferrater.resource.models.Patient;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,8 +44,10 @@ public class PatientServiceTest {
 
     @Test
     public void shouldFindPatientBySocialSecurityNumber() {
-        final Patient result = target.findBySocialSecurityNumber("2345678");
+        final Optional<Patient> patientOptional = target.findBySocialSecurityNumber("2345678");
+        assertThat(patientOptional.isPresent(), is(true));
 
+        final Patient result = patientOptional.get();
         assertThat(result.getContactNumber(), is("072123456"));
         assertThat(result.getFirstName(), is("Wella"));
         assertThat(result.getLastName(), is("Opalla"));
