@@ -5,4 +5,4 @@ jdk:
   - openjdk8
 
 script:
-  - if [[ `./build.sh` ]]; then >&2 echo "Fail"; exit 1; fi'
+  - if [[ `./build.sh` ]]; then >&2 echo "Fail"; exit 1; fi
